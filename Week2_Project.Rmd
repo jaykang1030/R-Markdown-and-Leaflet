@@ -1,0 +1,80 @@
+---
+title: "R Markdown and Leaflet"
+author: "Zhe Jiang"
+date: "11/17/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Leaflet is one of the most popular Javascript libraries for
+creating interactive maps. The leaflet R package allows you
+to create your own leaflet maps without needing to know any
+Javascript!
+
+In this smnall project, I will show all the location of 10 Universitiy of California with customized logo with corresponding popup logos and main webstite.
+
+## Load necessary libraries
+```{r message = FALSE}
+library(leaflet)
+library(dplyr)
+```
+
+
+Create Data Frame with campus name and exact location (lattitude and longitute)
+```{r}
+UCLatLong <- data.frame(
+    campus = c("UCI","UCLA","UCB","UCSD","UCD",
+               "UCSB","UCR","UCM","UCSC","UCSF"),
+    lat = c(33.6482,34.0702,37.8719,32.8780,38.5382,
+            34.4140,33.9737,37.3642,36.9741,37.7631),
+    lng = c(-117.8420,-118.4453,-122.2594,-117.2347,-121.7617,
+            -119.8489,-117.3281,-120.4255,-122.0308,-122.4578))
+```
+
+Create specific icon list with customize size
+```{r}
+w = 60
+h = 30
+UCIcons <- iconList(
+    makeIcon(iconUrl = "./logos/UCI.png", iconWidth = w, iconHeight = h),
+    makeIcon(iconUrl = "./logos/UCLA.png", iconWidth = w, iconHeight = h),
+    makeIcon(iconUrl = "./logos/UCB.png", iconWidth = w, iconHeight = h),
+    makeIcon(iconUrl = "./logos/UCSD.png", iconWidth = w, iconHeight = h),
+    makeIcon(iconUrl = "./logos/UCD.png", iconWidth = w, iconHeight = h),
+    makeIcon(iconUrl = "./logos/UCSB.png", iconWidth = w, iconHeight = h),
+    makeIcon(iconUrl = "./logos/UCR.png", iconWidth = w, iconHeight = h),
+    makeIcon(iconUrl = "./logos/UCM.jpg", iconWidth = w, iconHeight = h),
+    makeIcon(iconUrl = "./logos/UCSC.jpg", iconWidth = w, iconHeight = h),
+    makeIcon(iconUrl = "./logos/UCSF.png", iconWidth = w, iconHeight = h)
+)
+```
+
+Create PopUp parameters with correspoinding website.
+```{r}
+UCSites <- c(
+  "<a href='http://www.uci.edu/'>UC Irvine</a>",
+  "<a href='http://www.ucla.edu/'>UCLA</a>",
+  "<a href='http://www.berkeley.edu/'>UC Berkerly</a>",
+  "<a href='http://www.ucsd.edu/'>UCSD</a>",
+  "<a href='http://www.ucdavis.edu/'>UC Davis</a>",
+  "<a href='http://www.ucsb.edu/'>UCSB</a>",
+  "<a href='http://www.ucr.edu/'>UC Riverside</a>",
+  "<a href='http://www.ucmerced.edu/'>UC Merced</a>",
+  "<a href='http://www.ucsc.edu/'>UCSC</a>",
+  "<a href='http://www.ucsf.edu/'>UCSF</a>"
+)
+```
+
+let' see how all UC campuses are distributed in California.
+
+```{r fig.align = 'center'}
+UCLatLong %>% 
+    leaflet() %>% 
+    addTiles() %>%
+    addMarkers(icon = UCIcons, popup = UCSites)
+```
